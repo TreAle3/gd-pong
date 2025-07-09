@@ -1,0 +1,52 @@
+# Godot 4 specific files
+.godot/
+.godot-sync/
+/android/
+
+# File temporanei che Godot crea quando converte scene da versioni precedenti
+*.tscn.converted
+*.scn.converted
+
+# Usati per GDNative e GDExtension
+*.gdns
+*.gdnlib
+
+# file generati automaticamente da Godot ogni volta che si importa una risorsa
+*.import
+
+# configurazioni per l'esportazione del gioco (Windows, macOS, Android, ecc) e potrebbero includere percorsi locali o chiavi private
+export_presets.cfg
+
+# Con questo parametro se crei un file vuoto chiamato .gdignore all'interno di una cartella, Godot ignorerà quella cartella e i suoi contenuti
+.gdignore
+
+# macOS
+.tmp/
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Linux specific files
+.directory
+
+# Visual Studio Code
+.vscode/
+
+# Other common files
+*.bak
+*.orig
+*.blend1
+*.blend2
+*.xcf~
+*.psd~
+*.ase~
+*.aseprite~
+*.ksproj
+*.kmp
+*.user
+*.code-workspace
+
+# Cartelle mie da non caricare su github
+/ispirazione/
+/chiavi_ssh/
