@@ -48,6 +48,7 @@ Thumbs.db
 *.code-workspace
 
 # Cartelle mie da non caricare su github
+/autoload_abc/
 /ispirazione/
 /varie/
 /chiavi_ssh/
