@@ -16,17 +16,27 @@ enum StatiGioco {
 
 var Stato_Attuale: StatiGioco = StatiGioco.MENU
 
+# Preload degli script
+var script_palla_l = preload("res://script/oggetti/palla_logica.gd")
+var script_palla_g = preload("res://script/grafica/palla_grafica.gd")
+var script_pad_l = preload("res://script/oggetti/pad_logica.gd")
+var script_pad_g = preload("res://script/grafica/pad_grafica.gd")
 var script_fisica = preload("res://script/fisica.gd")
 var script_grafica = preload("res://script/grafica.gd")
 var script_ui = preload("res://script/ui.gd")
 
 # Oggetti globali
+var palla: Palla
+var padS: Pad
+var padD: Pad
+
 var o_grafica: Node2D;
 var o_fisica: Node;
 var o_ui:Control;
 
 # Funzione di inizializzazionr
 func _ready():
+	setup_oggetti_di_gioco()
 	setup_fisica()
 	setup_grafica()
 	setup_ui() # Chiamare per ultimo, in modo che compaia al top
@@ -36,6 +46,12 @@ func _ready():
 	o_grafica.Inizializza() # Inizializza tutti gli oggetti grafici
 	o_ui.Imposta_Referenze(self, o_fisica) # Imposta le referenze per o_ui
 	o_ui.Inizializza() # Inizializza tutti gli oggetti della ui
+
+# Imposta gli oggetti di gioco
+func setup_oggetti_di_gioco() -> void:
+	palla = Palla.new()
+	padS = Pad.new()
+	padD = Pad.new(Pad_logica.TipiPad.DES)
 
 # Imposta la fisica
 func setup_fisica() -> void:
@@ -76,6 +92,7 @@ func Stato_Gioco_Set(new_state: StatiGioco):
 
 func Stato_Gioco_Get() -> StatiGioco:
 	return Stato_Attuale
+
 
 func Stato_Gioco_Inizia():
 	if Stato_Attuale == StatiGioco.MENU or Stato_Attuale == StatiGioco.GAME_OVER:

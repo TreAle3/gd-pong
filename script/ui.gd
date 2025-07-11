@@ -67,31 +67,33 @@ func setup_title_label():
 
 # Crea e configura la label del titolo
 func Punteggi_Setup() -> void:
-	lbl_puntipl_Sin = Label_crea("p1-puntipl","Player1: " + str(ro_f.Sin_punti),16,Color.WHITE)
+	lbl_puntipl_Sin = Label_crea("p1-puntipl","Player1: " + str(ro_g.padS.data.punti),16,Color.WHITE)
 	lbl_puntipl_Sin.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT,0,10) # Posiziona in alto a destra, con margine 10
 	lbl_puntipl_Sin.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT # Centra il testo all'interno della label
 	lbl_puntipl_Sin.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	lbl_puntipl_Des = Label_crea("p2-puntipl","Player2: " + str(ro_f.Des_punti),16,Color.WHITE)
+	lbl_puntipl_Des = Label_crea("p2-puntipl","Player2: " + str(ro_g.padD.data.punti),16,Color.WHITE)
 	lbl_puntipl_Des.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT,0,10) # Posiziona in alto a destra, con margine 10
 	lbl_puntipl_Des.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT # Centra il testo all'interno della label
 	lbl_puntipl_Des.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	lbl_punti_Sin = Label_crea("p1-punti",str(ro_f.Sin_punti),64,Color.WHITE)
+	lbl_punti_Sin = Label_crea("p1-punti",str(ro_g.padS.data.punti),64,Color.WHITE)
 	lbl_punti_Sin.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER # Centra il testo all'interno della label
 	lbl_punti_Sin.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	Label_set_anchor(lbl_punti_Sin,0.35,0.5,0.0,0.75)
-	lbl_punti_Des = Label_crea("p2-punti",str(ro_f.Des_punti),64,Color.WHITE)
+	lbl_punti_Des = Label_crea("p2-punti",str(ro_g.padD.data.punti),64,Color.WHITE)
 	lbl_punti_Des.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER # Centra il testo all'interno della label
 	lbl_punti_Des.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	Label_set_anchor(lbl_punti_Des,0.5,0.65,0.0,0.75)
 
 # Aggiorna le label dei punteggi
 func Punteggi_Aggiorna() -> void:
-	if ro_f.Punti_Aggiornati:
-		lbl_puntipl_Sin.text = "Player1: " + str(ro_f.Sin_punti)
-		lbl_puntipl_Des.text = "Player2: " + str(ro_f.Des_punti)
-		lbl_punti_Sin.text = str(ro_f.Sin_punti)
-		lbl_punti_Des.text = str(ro_f.Des_punti)
-		ro_f.Punti_Aggiornati = false
+	if ro_g.padS.data.punti_aggiornato:
+		lbl_puntipl_Sin.text = "Player1: " + str(ro_g.padS.data.punti)
+		lbl_punti_Sin.text = str(ro_g.padS.data.punti)
+		ro_g.padS.data.punti_aggiornato = false
+	if ro_g.padD.data.punti_aggiornato:
+		lbl_puntipl_Des.text = "Player2: " + str(ro_g.padD.data.punti)
+		lbl_punti_Des.text = str(ro_g.padD.data.punti)
+		ro_g.padD.data.punti_aggiornato = false
 
 
 # Aggiorna la visibilità dei punteggi
@@ -126,13 +128,13 @@ func Gestisci_Input(delta):
 		return
 	# Controlli per il paddle sinistro
 	if Input.is_action_pressed("k_padS_su"):
-		ro_f.PadS_Muovi_Su(delta)
+		ro_g.padS.data.muovi_su(delta)
 	elif Input.is_action_pressed("k_padS_giu"):
-		ro_f.PadS_Muovi_Giu(delta)
+		ro_g.padS.data.muovi_giu(delta)
 	if Input.is_action_pressed("k_padD_su"):
-		ro_f.PadD_Muovi_Su(delta)
+		ro_g.padD.data.muovi_su(delta)
 	elif Input.is_action_pressed("k_padD_giu"):
-		ro_f.PadD_Muovi_Giu(delta)
+		ro_g.padD.data.muovi_giu(delta)
 
 
 # Gestisce gli input
