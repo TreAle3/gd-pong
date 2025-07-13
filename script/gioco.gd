@@ -34,6 +34,15 @@ var o_grafica: Node2D;
 var o_fisica: Node;
 var o_ui:Control;
 
+# Segnali
+signal s_inizio_partita() # Azzerare il punteggio, posizionare al centro i pad, lanciare la palla
+signal s_inizio_scambio() # lanciare la palla
+signal s_gol_segnato(pad: Pad_logica.TipiPad) # Aggiorna i punteggi, nasconde la palla, lancia il timer per l'inizio scambio
+signal s_fine_partita() # Visualizza i punteggi, imposta il game over
+
+# Timer
+var t_inizio_nuovo_scambio: Timer
+
 # Funzione di inizializzazionr
 func _ready():
 	setup_oggetti_di_gioco()
@@ -46,6 +55,8 @@ func _ready():
 	o_grafica.Inizializza() # Inizializza tutti gli oggetti grafici
 	o_ui.Imposta_Referenze(self, o_fisica) # Imposta le referenze per o_ui
 	o_ui.Inizializza() # Inizializza tutti gli oggetti della ui
+	setup_timer_inizio_nuovo_scambio()
+	s_gol_segnato.connect(_on_gol_segnato)
 
 # Imposta gli oggetti di gioco
 func setup_oggetti_di_gioco() -> void:
@@ -94,10 +105,9 @@ func Stato_Gioco_Get() -> StatiGioco:
 	return Stato_Attuale
 
 
-func Stato_Gioco_Inizia():
+func Tasto_Inizia():
 	if Stato_Attuale == StatiGioco.MENU or Stato_Attuale == StatiGioco.GAME_OVER:
-		o_fisica.Inizializza()
-		o_ui.Punteggi_Visibili(false)
+		s_inizio_partita.emit()
 		Stato_Gioco_Set(StatiGioco.PLAYING)
 
 func Stato_Gioco_Pausa_Switch():
@@ -105,3 +115,22 @@ func Stato_Gioco_Pausa_Switch():
 		Stato_Gioco_Set(StatiGioco.PAUSED)
 	elif Stato_Attuale == StatiGioco.PAUSED:
 		Stato_Gioco_Set(StatiGioco.PLAYING)
+
+
+# Aggiungi questa funzione nella sezione setup
+func setup_timer_inizio_nuovo_scambio():
+	t_inizio_nuovo_scambio = Timer.new()
+	t_inizio_nuovo_scambio.wait_time = 1.0
+	t_inizio_nuovo_scambio.one_shot = true
+	t_inizio_nuovo_scambio.timeout.connect(_on_timer_inizio_nuovo_scambio_timeout)
+	add_child(t_inizio_nuovo_scambio)
+
+# Funzione chiamata quando il timer scade
+func _on_timer_inizio_nuovo_scambio_timeout():
+	print("Timer scaduto - Inizia nuovo punto")
+	s_inizio_scambio.emit()
+	Stato_Gioco_Set(StatiGioco.PLAYING)
+
+
+func _on_gol_segnato(_marcatore):
+	t_inizio_nuovo_scambio.start() # Avvia il timer per il nuovo scambio

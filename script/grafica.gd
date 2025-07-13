@@ -24,6 +24,9 @@ func Imposta_Referenze(ogg_gioco: Node, ogg_fisica: Node):
 
 func Inizializza():
 	Crea_Oggetti_Di_Gioco()
+	ro_g.s_inizio_partita.connect(_on_inizio_partita) # Connetti al segnale di inizio partita
+	ro_g.s_inizio_scambio.connect(_on_inizio_scambio) # Connetti al segnale di inizio scambio
+	ro_g.s_gol_segnato.connect(_on_gol_segnato) # Connetti al segnale di gol segnato
 
 func _process(_delta):
 	#update_ball(delta)
@@ -50,3 +53,12 @@ func Crea_Oggetti_Di_Gioco():
 	add_child(ro_g.palla)
 	add_child(ro_g.padS)
 	add_child(ro_g.padD)
+
+func _on_inizio_partita():
+	ro_g.palla.set_visibile(true)
+
+func _on_inizio_scambio():
+	ro_g.palla.set_visibile(true)
+
+func _on_gol_segnato(marcatore):
+	ro_g.palla.set_visibile(false) # Nasconde la pallina

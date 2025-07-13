@@ -20,14 +20,15 @@ func _init():
 	velocita = velocita_minima
 	resetta_posizione()
 
-# Resetta la posizione al centro dello schermo
-func resetta_posizione():
+
+# Resetta la posizione al centro dello schermo; con forza_dir_x 1.0 o -1.0 imposta la direzione palla verso sinistra o destra
+func resetta_posizione(forza_dir_x: float = 0):
 	posizione = SY.w_cen
 	velocita = velocita_minima
-	set_vettore_casuale()
+	set_vettore_casuale(forza_dir_x)
 
 
-# Assegna una direzione randomica alla palla
+# Assegna una direzione randomica alla palla; con forza_dir_x 1.0 o -1.0 imposta la direzione verso sinistra o destra
 func set_vettore_casuale(forza_dir_x: float = 0):
 	var dir_x: float
 	if forza_dir_x > 0:		dir_x = 1.0

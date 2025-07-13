@@ -39,7 +39,7 @@ func _ready():
 
 func _process(delta):
 	Gestisci_Input(delta)
-	Punteggi_Aggiorna()
+	#Punteggi_Aggiorna()
 
 # Imposta le referenze agli altri oggetti degli script esterni che servono in questo script
 # Da richiamare in gioco.gd dopo che sono stati inizializzati gli oggetti da inoltrare
@@ -49,6 +49,19 @@ func Imposta_Referenze(ogg_gioco: Node, ogg_fisica: Node):
 
 func Inizializza():
 	Punteggi_Setup()
+	ro_g.s_inizio_partita.connect(on_inizio_partita)
+	ro_g.s_inizio_scambio.connect(on_inizio_scambio)
+	ro_g.s_gol_segnato.connect(on_gol_segnato)
+
+func on_inizio_partita():
+	Punteggi_Visibili(false)
+
+func on_inizio_scambio():
+	Punteggi_Visibili(false)
+
+func on_gol_segnato(marcatore):
+	Punteggi_Aggiorna()
+	Punteggi_Visibili(true)
 
 # Crea e configura la label del titolo
 func setup_title_label():
@@ -86,14 +99,10 @@ func Punteggi_Setup() -> void:
 
 # Aggiorna le label dei punteggi
 func Punteggi_Aggiorna() -> void:
-	if ro_g.padS.data.punti_aggiornato:
-		lbl_puntipl_Sin.text = "Player1: " + str(ro_g.padS.data.punti)
-		lbl_punti_Sin.text = str(ro_g.padS.data.punti)
-		ro_g.padS.data.punti_aggiornato = false
-	if ro_g.padD.data.punti_aggiornato:
-		lbl_puntipl_Des.text = "Player2: " + str(ro_g.padD.data.punti)
-		lbl_punti_Des.text = str(ro_g.padD.data.punti)
-		ro_g.padD.data.punti_aggiornato = false
+	lbl_puntipl_Sin.text = "Player1: " + str(ro_g.padS.data.punti)
+	lbl_punti_Sin.text = str(ro_g.padS.data.punti)
+	lbl_puntipl_Des.text = "Player2: " + str(ro_g.padD.data.punti)
+	lbl_punti_Des.text = str(ro_g.padD.data.punti)
 
 
 # Aggiorna la visibilità dei punteggi
@@ -139,6 +148,7 @@ func Gestisci_Input(delta):
 
 # Gestisce gli input
 func _input(event):
+	var SG = ro_g.Stato_Gioco_Get()
 	# Gestisce l'input per chiudere il gioco (ESC su desktop)
 	if event.is_action_pressed("ui_cancel"):
 		if OS.get_name() in ["Windows", "macOS", "Linux", "FreeBSD", "NetBSD", "OpenBSD"]:
@@ -148,4 +158,4 @@ func _input(event):
 		ro_g.Stato_Gioco_Pausa_Switch()
 	# Gestisce l'inizio partita
 	if event.is_action_pressed("k_inizia") and ro_g:
-		ro_g.Stato_Gioco_Inizia()
+		ro_g.Tasto_Inizia()

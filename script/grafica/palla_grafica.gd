@@ -38,3 +38,7 @@ func texture_crea(radius: int, color: Color) -> ImageTexture:
 
 func set_colore(nuovo_colore: Color):
 	modulate = nuovo_colore
+
+# Imposta la visibilità della pallina
+func set_visibile(visibile: bool = true):
+	visible = visibile

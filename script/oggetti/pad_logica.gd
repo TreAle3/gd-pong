@@ -27,7 +27,7 @@ var y_min: float # Minima Y raggiungibile
 var y_max: float # Massima Y raggiungibile
 var tipo: TipiPad # Sinistro o destro
 var punti: int # Punteggio
-var punti_aggiornato: bool = false # Punteggio
+var punti_vittoria: int = 15; # Punti da raggiungere per conseguire la vittoria
 
 # Segnali
 # Punteggio cambiato
@@ -79,8 +79,7 @@ func verifica_collisione(corpo: Rect2) -> bool:
 # Resetta il punteggio
 func punti_resetta() -> void:
 	punti = 0
-	punti_aggiornato = true
 
-# Cambia lo stato di aggiornamento punti
-func punti_aggiornamento_effettuato() -> void:
-	punti_aggiornato = false
+# Controlla se il punteggio ha raggiunto la vittoria
+func punti_controlla_vittoria() -> bool:
+	return punti >= punti_vittoria

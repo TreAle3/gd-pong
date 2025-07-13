@@ -15,17 +15,34 @@ func Imposta_Referenze(ogg_gioco: Node):
 	ro_g = ogg_gioco
 
 func Inizializza():
-	pass
+	ro_g.s_inizio_partita.connect(_on_inizio_partita)
+	ro_g.s_inizio_scambio.connect(_on_inizio_scambio)
+	ro_g.s_gol_segnato.connect(_on_gol_segnato)
 	#Punti_Resetta() # Resetta i punteggi
 	#Palla_Resetta_Posizione() # Inizializza la palla al centro
 	#Pad_Resetta_Posizione() # Resetta la posizione dei pad
 	#Palla_set_Vettore() # Imposta un vettore randomico per la palla
+
 
 func _process(delta):
 	if ro_g and ro_g.Stato_Gioco_Get() == ro_g.StatiGioco.PLAYING:
 		ro_g.palla.data.aggiorna_posizione(delta)
 		gestione_collisioni()
 		gestione_gol()
+
+
+func _on_inizio_partita():
+	ro_g.palla.data.resetta_posizione()
+	ro_g.padS.data.resetta_posizione()
+	ro_g.padD.data.resetta_posizione()
+
+func _on_inizio_scambio():
+	pass
+
+func _on_gol_segnato(marcatore: Pad_logica.TipiPad):
+	var Direz = 1.0
+	if marcatore == Pad_logica.TipiPad.DES: Direz = -1.0
+	ro_g.palla.data.resetta_posizione(Direz) # Imposta vettore x a seconda di chi ha segnato
 
 func gestione_collisioni():
 	var Collisione = false
@@ -53,16 +70,23 @@ func gestione_collisioni():
 # Controllo goal
 func gestione_gol():
 	var Gol = false
+	var pad_segnato: Pad_logica.TipiPad
 	if ro_g.palla.data.posizione.x < 0: # Goal per player 2
 		#print("Goal per player 2")
 		ro_g.padD.data.punti += 1
-		ro_g.padD.data.punti_aggiornato = true
 		Gol = true
+		pad_segnato = Pad_logica.TipiPad.SIN
 	elif ro_g.palla.data.posizione.x > SY.w_dim.x: # Goal per player 1
 		#print("Goal per player 1")
 		ro_g.padS.data.punti += 1
-		ro_g.padS.data.punti_aggiornato = true
 		Gol = true
-	if Gol:
-		ro_g.palla.data.resetta_posizione()
+		pad_segnato = Pad_logica.TipiPad.DES
+	if ro_g.padS.data.punti_controlla_vittoria() or ro_g.padD.data.punti_controlla_vittoria(): # Partita finita
+		ro_g.s_gol_segnato.emit(pad_segnato)
+		ro_g.Stato_Gioco_Set(ro_g.StatiGioco.GAME_OVER)
+		print("GAME_OVER")
+		ro_g.s_fine_partita.emit(pad_segnato)
+	elif Gol:
+		#ro_g.palla.data.resetta_posizione()
 		ro_g.Stato_Gioco_Set(ro_g.StatiGioco.SCORED)
+		ro_g.s_gol_segnato.emit(pad_segnato)
